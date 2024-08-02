@@ -3,11 +3,19 @@ apply plugin: 'kotlin-android'
 //apply plugin: 'kotlin-android-extensions'
 //apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-parcelize'
+apply plugin: 'maven-publish'
 apply from: "../ktlint.gradle"
 
 android {
     namespace 'com.github.dhaval2404.colorpicker'
     compileSdk 34
+
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
 
     defaultConfig {
         minSdkVersion 21
@@ -58,6 +66,57 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                groupId = 'com.github.dhaval2404'
+                artifactId = 'colorpicker-patch'
+                version = '2.3-patch1'
+
+                pom {
+                    name = 'colorpicker'
+                    description = 'A ColorPicker library for android. Miscellaneous patches added.'
+                    url = 'https://github.com/unbiaseduser-github/ColorPicker'
+
+                    licenses {
+                        license {
+                            name = 'The Apache Software License, Version 2.0'
+                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id = 'dhaval2404'
+                            name = 'Dhaval Patel'
+                            email = 'dhavalpatel244@gmail.com'
+                            url = 'https://github.com/Dhaval2404/'
+                        }
+
+                        developer {
+                            id = 'unbiaseduser-github'
+                            name = 'Dang Quang Trung'
+                            email = 'quangtrung02hn16@gmail.com'
+                            url = 'https://github.com/unbiaseduser-github'
+                        }
+                    }
+
+                    scm {
+                        connection = 'scm:git:git://github.com/unbiaseduser-github/ColorPicker.git'
+                        developerConnection = 'scm:git:ssh://github.com:unbiaseduser-github/ColorPicker.git'
+                        url = 'https://github.com/unbiaseduser-github/ColorPicker/tree/master'
+                    }
+                }
+
+                afterEvaluate {
+                    from components.release
+                }
+            }
+        }
+    }
 }
 
 /*ext {
