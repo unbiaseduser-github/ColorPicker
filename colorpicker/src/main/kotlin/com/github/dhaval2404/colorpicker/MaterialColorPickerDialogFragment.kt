@@ -72,6 +72,16 @@ class MaterialColorPickerDialogFragment : DialogFragment() {
         }
     }
 
+    fun setColorListener(listener: ColorListener?): MaterialColorPickerDialogFragment {
+        this.colorListener = listener
+        return this
+    }
+
+    fun setDismissListener(listener: DismissListener?): MaterialColorPickerDialogFragment {
+        this.dismissListener = listener
+        return this
+    }
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         arguments?.let {
             title = it.getString(EXTRA_TITLE)
