@@ -1,7 +1,7 @@
 package com.github.dhaval2404.colorpicker.model
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 /**
  * Used for Color Palette Selection

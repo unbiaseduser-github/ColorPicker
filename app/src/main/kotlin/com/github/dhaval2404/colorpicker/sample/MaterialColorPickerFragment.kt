@@ -13,8 +13,8 @@ import com.github.dhaval2404.colorpicker.MaterialColorPickerDialog
 import com.github.dhaval2404.colorpicker.listener.ColorListener
 import com.github.dhaval2404.colorpicker.model.ColorShape
 import com.github.dhaval2404.colorpicker.model.ColorSwatch
+import com.github.dhaval2404.colorpicker.sample.databinding.FragmentMaterialColorPickerBinding
 import com.github.dhaval2404.colorpicker.util.ColorUtil
-import kotlinx.android.synthetic.main.fragment_material_color_picker.*
 
 /**
  * MaterialColorPicker Demo
@@ -30,18 +30,22 @@ class MaterialColorPickerFragment : Fragment() {
     private var mMaterialColorBottomSheet = ""
     private var mMaterialPreDefinedColor = ""
 
+    private var _binding: FragmentMaterialColorPickerBinding? = null
+    private val binding: FragmentMaterialColorPickerBinding get() = _binding!!
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_material_color_picker, container, false)
+    ): View {
+        _binding = FragmentMaterialColorPickerBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        materialDialogPickerSquareBtn.setOnClickListener { _ ->
+        binding.materialDialogPickerSquareBtn.setOnClickListener { _ ->
             MaterialColorPickerDialog
                 .Builder(requireActivity()) // Pass Activity Instance
                 .setColorShape(ColorShape.SQAURE) // Or ColorShape.CIRCLE
@@ -49,12 +53,12 @@ class MaterialColorPickerFragment : Fragment() {
                 .setDefaultColor(mMaterialColorSquare) // Pass Default Color
                 .setColorListener { color, colorHex ->
                     mMaterialColorSquare = colorHex
-                    setButtonBackground(materialDialogPickerSquareBtn, color)
+                    setButtonBackground(binding.materialDialogPickerSquareBtn, color)
                 }
                 .show()
         }
 
-        materialDialogPickerCircleBtn.setOnClickListener { _ ->
+        binding.materialDialogPickerCircleBtn.setOnClickListener { _ ->
             MaterialColorPickerDialog
                 .Builder(requireActivity())
                 .setColorSwatch(ColorSwatch._500)
@@ -62,7 +66,7 @@ class MaterialColorPickerFragment : Fragment() {
                 .setColorListener(object : ColorListener {
                     override fun onColorSelected(color: Int, colorHex: String) {
                         mMaterialColorCircle = colorHex
-                        setButtonBackground(materialDialogPickerCircleBtn, color)
+                        setButtonBackground(binding.materialDialogPickerCircleBtn, color)
                     }
                 })
                 .setDismissListener {
@@ -71,7 +75,7 @@ class MaterialColorPickerFragment : Fragment() {
                 .show()
         }
 
-        materialBottomSheetDialogBtn.setOnClickListener { _ ->
+        binding.materialBottomSheetDialogBtn.setOnClickListener { _ ->
             MaterialColorPickerDialog
                 .Builder(requireActivity())
                 .setColorSwatch(ColorSwatch._300)
@@ -79,7 +83,7 @@ class MaterialColorPickerFragment : Fragment() {
                 .setColorListener(object : ColorListener {
                     override fun onColorSelected(color: Int, colorHex: String) {
                         mMaterialColorBottomSheet = colorHex
-                        setButtonBackground(materialBottomSheetDialogBtn, color)
+                        setButtonBackground(binding.materialBottomSheetDialogBtn, color)
                     }
                 })
                 .setDismissListener {
@@ -88,7 +92,7 @@ class MaterialColorPickerFragment : Fragment() {
                 .showBottomSheet(childFragmentManager)
         }
 
-        materialPreDefinedColorPickerBtn.setOnClickListener { _ ->
+        binding.materialPreDefinedColorPickerBtn.setOnClickListener { _ ->
             MaterialColorPickerDialog
                 .Builder(requireActivity())
                 // .setColors(arrayListOf("#f6e58d", "#ffbe76", "#ff7979", "#badc58", "#dff9fb", "#7ed6df", "#e056fd", "#686de0", "#30336b", "#95afc0"))
@@ -98,7 +102,7 @@ class MaterialColorPickerFragment : Fragment() {
                 .setColorListener(object : ColorListener {
                     override fun onColorSelected(color: Int, colorHex: String) {
                         mMaterialPreDefinedColor = colorHex
-                        setButtonBackground(materialPreDefinedColorPickerBtn, color)
+                        setButtonBackground(binding.materialPreDefinedColorPickerBtn, color)
                     }
                 })
                 .showBottomSheet(childFragmentManager)
@@ -112,5 +116,10 @@ class MaterialColorPickerFragment : Fragment() {
             btn.setTextColor(Color.BLACK)
         }
         btn.backgroundTintList = ColorStateList.valueOf(color)
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 }

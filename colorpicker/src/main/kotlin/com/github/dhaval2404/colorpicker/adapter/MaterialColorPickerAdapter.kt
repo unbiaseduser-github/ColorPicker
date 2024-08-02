@@ -1,13 +1,13 @@
 package com.github.dhaval2404.colorpicker.adapter
 
 import android.graphics.Color
-import android.view.View
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.github.dhaval2404.colorpicker.databinding.AdapterMaterialColorPickerBinding
 import com.github.dhaval2404.colorpicker.model.ColorShape
 import com.github.dhaval2404.colorpicker.util.ColorUtil
 import com.github.dhaval2404.colorpicker.util.setVisibility
-import kotlinx.android.synthetic.main.adapter_material_color_picker.view.*
 
 /**
  * Material Color Listing
@@ -48,22 +48,22 @@ class MaterialColorPickerAdapter(private val colors: List<String>) :
     override fun getItemCount() = colors.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MaterialColorViewHolder {
-        val rootView = ColorViewBinding.inflateAdapterItemView(parent)
-        return MaterialColorViewHolder(rootView)
+        val binding = AdapterMaterialColorPickerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return MaterialColorViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: MaterialColorViewHolder, position: Int) {
         holder.bind(position)
     }
 
-    inner class MaterialColorViewHolder(private val rootView: View) :
-        RecyclerView.ViewHolder(rootView) {
+    inner class MaterialColorViewHolder(private val binding: AdapterMaterialColorPickerBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
-        private val colorView = rootView.colorView
-        private val checkIcon = rootView.checkIcon
+        private val colorView = binding.colorView
+        private val checkIcon = binding.checkIcon
 
         init {
-            rootView.setOnClickListener {
+            binding.root.setOnClickListener {
                 val newIndex = it.tag as Int
                 val color = getItem(newIndex)
 
@@ -78,7 +78,7 @@ class MaterialColorPickerAdapter(private val colors: List<String>) :
         fun bind(position: Int) {
             val color = getItem(position)
 
-            rootView.tag = position
+            binding.root.tag = position
 
             ColorViewBinding.setBackgroundColor(colorView, color)
             ColorViewBinding.setCardRadius(colorView, colorShape)

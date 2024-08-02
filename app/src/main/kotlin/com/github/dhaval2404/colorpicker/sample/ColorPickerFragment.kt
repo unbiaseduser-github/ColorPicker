@@ -12,9 +12,9 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.github.dhaval2404.colorpicker.ColorPickerDialog
 import com.github.dhaval2404.colorpicker.model.ColorShape
+import com.github.dhaval2404.colorpicker.sample.databinding.FragmentColorPickerBinding
 import com.github.dhaval2404.colorpicker.util.ColorUtil
 import com.github.dhaval2404.colorpicker.util.SharedPref
-import kotlinx.android.synthetic.main.fragment_color_picker.*
 
 /**
  * ColorPicker Demo
@@ -26,13 +26,16 @@ import kotlinx.android.synthetic.main.fragment_color_picker.*
 class ColorPickerFragment : Fragment() {
 
     private var mColor = 0
+    private var _binding: FragmentColorPickerBinding? = null
+    private val binding: FragmentColorPickerBinding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_color_picker, container, false)
+    ): View {
+        _binding = FragmentColorPickerBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -40,15 +43,15 @@ class ColorPickerFragment : Fragment() {
 
         val primaryColor = ContextCompat.getColor(requireContext(), R.color.colorPrimary)
         mColor = SharedPref(requireContext()).getRecentColor(primaryColor)
-        colorPickerBtn.setOnClickListener { _ ->
+        binding.colorPickerBtn.setOnClickListener { _ ->
             ColorPickerDialog
                 .Builder(requireActivity()) // Pass Activity Instance
                 .setColorShape(ColorShape.SQAURE) // Or ColorShape.CIRCLE
                 .setDefaultColor(mColor) // Pass Default Color
                 .setColorListener { color, _ ->
                     mColor = color
-                    colorPickerView.setColor(color)
-                    setButtonBackground(colorPickerBtn, color)
+                    binding.colorPickerView.setColor(color)
+                    setButtonBackground(binding.colorPickerBtn, color)
                 }
                 .setDismissListener {
                     Log.d("ColorPickerDialog", "Handle dismiss event")
@@ -64,5 +67,10 @@ class ColorPickerFragment : Fragment() {
             btn.setTextColor(Color.BLACK)
         }
         btn.backgroundTintList = ColorStateList.valueOf(color)
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 }
