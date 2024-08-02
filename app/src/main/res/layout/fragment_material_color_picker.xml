@@ -11,6 +11,25 @@
     tools:showIn="@layout/activity_main">
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/materialDialogFragmentPickerSquareBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center_horizontal"
+        android:padding="12dp"
+        android:text="Material Color Picker (Fragment)"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/materialDialogFragmentPickerCircleBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center_horizontal"
+        app:cornerRadius="30dp"
+        android:padding="12dp"
+        android:text="Material Color Picker (Fragment)"/>
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/materialDialogPickerSquareBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

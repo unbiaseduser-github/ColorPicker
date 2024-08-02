@@ -6,6 +6,7 @@ import android.view.View
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.dhaval2404.colorpicker.adapter.MaterialColorPickerAdapter
@@ -16,6 +17,7 @@ import com.github.dhaval2404.colorpicker.model.ColorSwatch
 import com.github.dhaval2404.colorpicker.util.ColorUtil
 import com.github.dhaval2404.colorpicker.util.setButtonTextColor
 import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 /**
  * Color Picker from Predefined color set in AlertDialog
@@ -297,14 +299,25 @@ class MaterialColorPickerDialog private constructor(
         }
     }
 
+    fun createBottomSheet(): BottomSheetDialogFragment {
+        return MaterialColorPickerBottomSheet.getInstance(this)
+            .setColorListener(colorListener)
+            .setDismissListener(dismissListener)
+    }
+
     /**
      * Show BottomSheet Dialog
      */
-    fun showBottomSheet(fragmentManager: FragmentManager) {
-        MaterialColorPickerBottomSheet.getInstance(this)
-            .setColorListener(colorListener)
-            .setDismissListener(dismissListener)
-            .show(fragmentManager, "")
+    fun showBottomSheet(fragmentManager: FragmentManager): BottomSheetDialogFragment {
+        return createBottomSheet().apply { show(fragmentManager, "") }
+    }
+
+    fun createDialog(): DialogFragment {
+        return MaterialColorPickerDialogFragment.newInstance(this)
+    }
+
+    fun showDialog(fragmentManager: FragmentManager): DialogFragment {
+        return createDialog().apply { show(fragmentManager, "") }
     }
 
     /**

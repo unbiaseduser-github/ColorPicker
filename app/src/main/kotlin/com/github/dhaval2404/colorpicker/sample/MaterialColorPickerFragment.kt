@@ -45,6 +45,38 @@ class MaterialColorPickerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.materialDialogFragmentPickerSquareBtn.setOnClickListener {
+            MaterialColorPickerDialog
+                .Builder(requireActivity()) // Pass Activity Instance
+                .setColorShape(ColorShape.SQAURE) // Or ColorShape.CIRCLE
+                .setColorSwatch(ColorSwatch._300) // Default ColorSwatch._500
+                .setDefaultColor(mMaterialColorSquare) // Pass Default Color
+                .setColorListener { color, colorHex ->
+                    mMaterialColorSquare = colorHex
+                    setButtonBackground(binding.materialDialogFragmentPickerSquareBtn, color)
+                }
+                .build()
+                .showDialog(childFragmentManager)
+        }
+
+        binding.materialDialogFragmentPickerCircleBtn.setOnClickListener {
+            MaterialColorPickerDialog
+                .Builder(requireActivity())
+                .setColorSwatch(ColorSwatch._500)
+                .setDefaultColor(mMaterialColorCircle)
+                .setColorListener(object : ColorListener {
+                    override fun onColorSelected(color: Int, colorHex: String) {
+                        mMaterialColorCircle = colorHex
+                        setButtonBackground(binding.materialDialogFragmentPickerCircleBtn, color)
+                    }
+                })
+                .setDismissListener {
+                    Log.d("MaterialDialogPicker", "Handle dismiss event")
+                }
+                .build()
+                .showDialog(childFragmentManager)
+        }
+
         binding.materialDialogPickerSquareBtn.setOnClickListener { _ ->
             MaterialColorPickerDialog
                 .Builder(requireActivity()) // Pass Activity Instance
