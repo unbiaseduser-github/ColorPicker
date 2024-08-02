@@ -147,40 +147,12 @@ class ColorPickerDialog private constructor(
         }
 
         /**
-         * Set Color Listener
-         *
-         * @param listener (Int, String)->Unit
-         */
-        fun setColorListener(listener: (Int, String) -> Unit): Builder {
-            this.colorListener = object : ColorListener {
-                override fun onColorSelected(color: Int, colorHex: String) {
-                    listener(color, colorHex)
-                }
-            }
-            return this
-        }
-
-        /**
          * Sets the callback that will be called when the dialog is dismissed for any reason.
          *
          * @param listener DismissListener
          */
         fun setDismissListener(listener: DismissListener?): Builder {
             this.dismissListener = listener
-            return this
-        }
-
-        /**
-         * Sets the callback that will be called when the dialog is dismissed for any reason.
-         *
-         * @param listener listener: () -> Unit
-         */
-        fun setDismissListener(listener: () -> Unit): Builder {
-            this.dismissListener = object : DismissListener {
-                override fun onDismiss() {
-                    listener.invoke()
-                }
-            }
             return this
         }
 

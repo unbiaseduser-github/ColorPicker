@@ -7,7 +7,7 @@ package com.github.dhaval2404.colorpicker.listener
  * @version 1.0
  * @since 23 Dec 2019
  */
-interface ColorListener {
+fun interface ColorListener {
 
     /**
      *
