@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +17,7 @@ import com.github.dhaval2404.colorpicker.util.ColorUtil
 import com.github.dhaval2404.colorpicker.util.setButtonTextColor
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 /**
  * Color Picker from Predefined color set in AlertDialog
@@ -325,7 +325,7 @@ class MaterialColorPickerDialog private constructor(
      */
     fun show() {
         // Create Dialog Instance
-        val dialog = AlertDialog.Builder(context)
+        val dialog = MaterialAlertDialogBuilder(context)
             .setTitle(title)
             .setNegativeButton(negativeButton, null)
 
