@@ -7,6 +7,8 @@ import android.view.View
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.dhaval2404.colorpicker.adapter.RecentColorAdapter
 import com.github.dhaval2404.colorpicker.listener.ColorListener
@@ -183,6 +185,15 @@ class ColorPickerDialog private constructor(
         fun show() {
             build().show()
         }
+    }
+
+    fun createDialog(): DialogFragment {
+        return ColorPickerDialogFragment.newInstance(this)
+    }
+
+    @JvmOverloads
+    fun showDialog(fragmentManager: FragmentManager, tag: String? = null): DialogFragment {
+        return createDialog().apply { show(fragmentManager, tag) }
     }
 
     /**

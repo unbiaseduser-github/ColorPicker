@@ -19,5 +19,8 @@ fun FragmentManager.reinstateFragmentListenersIfApplicable(
         is MaterialColorPickerBottomSheet -> {
             fragment.setColorListener(colorListener).setDismissListener(dismissListener)
         }
+        is ColorPickerDialogFragment -> {
+            fragment.setColorListener(colorListener).setDismissListener(dismissListener)
+        }
     }
 }

@@ -11,7 +11,10 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.github.dhaval2404.colorpicker.ColorPickerDialog
+import com.github.dhaval2404.colorpicker.listener.ColorListener
+import com.github.dhaval2404.colorpicker.listener.DismissListener
 import com.github.dhaval2404.colorpicker.model.ColorShape
+import com.github.dhaval2404.colorpicker.reinstateFragmentListenersIfApplicable
 import com.github.dhaval2404.colorpicker.sample.databinding.FragmentColorPickerBinding
 import com.github.dhaval2404.colorpicker.util.ColorUtil
 import com.github.dhaval2404.colorpicker.util.SharedPref
@@ -57,6 +60,33 @@ class ColorPickerFragment : Fragment() {
                     Log.d("ColorPickerDialog", "Handle dismiss event")
                 }
                 .show()
+        }
+
+        val colorPickerFragmentBtnColorListener = ColorListener { color, _ ->
+            mColor = color
+            binding.colorPickerView.setColor(color)
+            setButtonBackground(binding.colorPickerFragmentBtn, color)
+        }
+
+        val colorPickerFragmentBtnDismissListener = DismissListener {
+            Log.d("ColorPickerDialog", "Handle dismiss event")
+        }
+
+        childFragmentManager.reinstateFragmentListenersIfApplicable(
+            tag = "colorPickerFragmentBtn",
+            colorListener = colorPickerFragmentBtnColorListener,
+            dismissListener = colorPickerFragmentBtnDismissListener
+        )
+
+        binding.colorPickerFragmentBtn.setOnClickListener { _ ->
+            ColorPickerDialog
+                .Builder(requireActivity()) // Pass Activity Instance
+                .setColorShape(ColorShape.SQAURE) // Or ColorShape.CIRCLE
+                .setDefaultColor(mColor) // Pass Default Color
+                .setColorListener(colorPickerFragmentBtnColorListener)
+                .setDismissListener(colorPickerFragmentBtnDismissListener)
+                .build()
+                .showDialog(childFragmentManager, "colorPickerFragmentBtn")
         }
     }
 

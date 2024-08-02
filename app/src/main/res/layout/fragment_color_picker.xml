@@ -23,4 +23,12 @@
         android:layout_gravity="center_horizontal"
         android:text="Color Picker"/>
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/colorPickerFragmentBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center_horizontal"
+        android:text="Color Picker (Fragment)"/>
+
 </LinearLayout>
