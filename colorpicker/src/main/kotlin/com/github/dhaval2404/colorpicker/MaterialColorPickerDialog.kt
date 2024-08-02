@@ -294,8 +294,9 @@ class MaterialColorPickerDialog private constructor(
         /**
          * Show BottomSheet Dialog
          */
-        fun showBottomSheet(fragmentManager: FragmentManager) {
-            build().showBottomSheet(fragmentManager)
+        @JvmOverloads
+        fun showBottomSheet(fragmentManager: FragmentManager, tag: String? = null) {
+            build().showBottomSheet(fragmentManager, tag)
         }
     }
 
@@ -308,16 +309,18 @@ class MaterialColorPickerDialog private constructor(
     /**
      * Show BottomSheet Dialog
      */
-    fun showBottomSheet(fragmentManager: FragmentManager): BottomSheetDialogFragment {
-        return createBottomSheet().apply { show(fragmentManager, "") }
+    @JvmOverloads
+    fun showBottomSheet(fragmentManager: FragmentManager, tag: String? = null): BottomSheetDialogFragment {
+        return createBottomSheet().apply { show(fragmentManager, tag) }
     }
 
     fun createDialog(): DialogFragment {
         return MaterialColorPickerDialogFragment.newInstance(this)
     }
 
-    fun showDialog(fragmentManager: FragmentManager): DialogFragment {
-        return createDialog().apply { show(fragmentManager, "") }
+    @JvmOverloads
+    fun showDialog(fragmentManager: FragmentManager, tag: String? = null): DialogFragment {
+        return createDialog().apply { show(fragmentManager, tag) }
     }
 
     /**
