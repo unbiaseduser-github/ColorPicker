@@ -135,8 +135,8 @@ class MaterialColorPickerBottomSheet : BottomSheetDialogFragment() {
         binding.negativeBtn.setOnClickListener { dismiss() }
     }
 
-    override fun dismiss() {
-        super.dismiss()
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
         dismissListener?.onDismiss()
     }
 

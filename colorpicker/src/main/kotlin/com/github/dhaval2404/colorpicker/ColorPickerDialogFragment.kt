@@ -30,7 +30,6 @@ class ColorPickerDialogFragment : DialogFragment() {
     private var dismissListener: DismissListener? = null
     private var defaultColor: String? = null
     private var colorShape: ColorShape = ColorShape.CIRCLE
-    private var positiveButtonClicked: Boolean = false
     private lateinit var sharedPref: SharedPref
 
     companion object {
@@ -123,7 +122,10 @@ class ColorPickerDialogFragment : DialogFragment() {
 
         // Set Submit Click Listener
         dialog.setPositiveButton(positiveButton) { _, _ ->
-            positiveButtonClicked = true
+            val color = binding.colorPicker.getColor()
+            val colorHex = ColorUtil.formatColor(color)
+            colorListener?.onColorSelected(color, colorHex)
+            sharedPref.addColor(color = colorHex)
         }
 
         return dialog.create().apply { setButtonTextColor() }
@@ -132,12 +134,6 @@ class ColorPickerDialogFragment : DialogFragment() {
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         dismissListener?.onDismiss()
-        if (positiveButtonClicked) {
-            val color = binding.colorPicker.getColor()
-            val colorHex = ColorUtil.formatColor(color)
-            colorListener?.onColorSelected(color, colorHex)
-            sharedPref.addColor(color = colorHex)
-        }
     }
 
     override fun onCancel(dialog: DialogInterface) {
