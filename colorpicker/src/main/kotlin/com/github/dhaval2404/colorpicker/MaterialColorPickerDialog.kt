@@ -3,7 +3,7 @@ package com.github.dhaval2404.colorpicker
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
-import androidx.annotation.ColorRes
+import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
@@ -126,9 +126,9 @@ class MaterialColorPickerDialog private constructor(
         /**
          * Set Default Selected Color
          *
-         * @param color Int ColorRes
+         * @param color Int Color
          */
-        fun setDefaultColor(@ColorRes color: Int): Builder {
+        fun setDefaultColor(@ColorInt color: Int): Builder {
             this.defaultColor = ColorUtil.formatColor(color)
             return this
         }
