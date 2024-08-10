@@ -34,6 +34,8 @@ class MaterialColorPickerBottomSheet : BottomSheetDialogFragment() {
     private var colorSwatch: ColorSwatch = ColorSwatch._300
     private var colors: List<String>? = null
     private var isTickColorPerCard: Boolean = false
+    private lateinit var adapter: MaterialColorPickerAdapter
+    private var positiveButtonClicked: Boolean = false
 
     private var _binding: DialogBottomsheetMaterialColorPickerBinding? = null
     private val binding: DialogBottomsheetMaterialColorPickerBinding get() = _binding!!
@@ -114,7 +116,7 @@ class MaterialColorPickerBottomSheet : BottomSheetDialogFragment() {
         negativeButton?.let { binding.negativeBtn.text = it }
 
         val colorList = colors ?: ColorUtil.getColors(requireContext(), colorSwatch.value)
-        val adapter = MaterialColorPickerAdapter(colorList)
+        adapter = MaterialColorPickerAdapter(colorList)
         adapter.setColorShape(colorShape)
         adapter.setTickColorPerCard(isTickColorPerCard)
         if (!defaultColor.isNullOrBlank()) {
@@ -126,10 +128,7 @@ class MaterialColorPickerBottomSheet : BottomSheetDialogFragment() {
         binding.materialColorRV.adapter = adapter
 
         binding.positiveBtn.setOnClickListener {
-            val color = adapter.getSelectedColor()
-            if (color.isNotBlank()) {
-                colorListener?.onColorSelected(ColorUtil.parseColor(color), color)
-            }
+            positiveButtonClicked = true
             dismiss()
         }
         binding.negativeBtn.setOnClickListener { dismiss() }
@@ -138,6 +137,12 @@ class MaterialColorPickerBottomSheet : BottomSheetDialogFragment() {
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         dismissListener?.onDismiss()
+        if (positiveButtonClicked) {
+            val color = adapter.getSelectedColor()
+            if (color.isNotBlank()) {
+                colorListener?.onColorSelected(ColorUtil.parseColor(color), color)
+            }
+        }
     }
 
     override fun onCancel(dialog: DialogInterface) {
