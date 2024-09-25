@@ -3,6 +3,7 @@ package com.github.dhaval2404.colorpicker.adapter
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.util.Consumer
 import androidx.recyclerview.widget.RecyclerView
 import com.github.dhaval2404.colorpicker.databinding.AdapterMaterialColorPickerBinding
 import com.github.dhaval2404.colorpicker.model.ColorShape
@@ -16,8 +17,10 @@ import com.github.dhaval2404.colorpicker.util.setVisibility
  * @version 1.0
  * @since 23 Dec 2019
  */
-class MaterialColorPickerAdapter(private val colors: List<String>) :
-    RecyclerView.Adapter<MaterialColorPickerAdapter.MaterialColorViewHolder>() {
+class MaterialColorPickerAdapter(
+    private val colors: List<String>,
+    private val onColorSelected: Consumer<String>
+) : RecyclerView.Adapter<MaterialColorPickerAdapter.MaterialColorViewHolder>() {
 
     private var isDarkColor = false
     private var color = ""
@@ -72,6 +75,8 @@ class MaterialColorPickerAdapter(private val colors: List<String>) :
 
                 notifyItemChanged(oldIndex)
                 notifyItemChanged(newIndex)
+
+                onColorSelected.accept(color)
             }
         }
 

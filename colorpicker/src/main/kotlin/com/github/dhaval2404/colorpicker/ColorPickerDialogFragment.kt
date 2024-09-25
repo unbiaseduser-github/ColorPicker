@@ -104,8 +104,8 @@ open class ColorPickerDialogFragment() : DialogFragment() {
         colorView.setCardBackgroundColor(initialColor)
 
         colorPicker.setColor(initialColor)
-        colorPicker.setColorListener { color, _ ->
-            colorView.setCardBackgroundColor(color)
+        colorPicker.setColorListener { color, colorHex ->
+            onColorSelected(color, colorHex)
         }
 
         sharedPref = SharedPref(context)
@@ -114,9 +114,8 @@ open class ColorPickerDialogFragment() : DialogFragment() {
         // Setup Color Listing Adapter
         val adapter = RecentColorAdapter(colorList)
         adapter.setColorShape(colorShape)
-        adapter.setColorListener { color, _ ->
-            colorPicker.setColor(color)
-            colorView.setCardBackgroundColor(color)
+        adapter.setColorListener { color, colorHex ->
+            onRecentColorSelected(color, colorHex)
         }
 
         recentColorsRV.layoutManager = FlexboxLayoutManager(context)
@@ -128,6 +127,15 @@ open class ColorPickerDialogFragment() : DialogFragment() {
         }
 
         return dialog.create().apply { setButtonTextColor() }
+    }
+
+    protected open fun onColorSelected(color: Int, colorHex: String) {
+        binding.colorView.setCardBackgroundColor(color)
+    }
+
+    protected open fun onRecentColorSelected(color: Int, colorHex: String) {
+        binding.colorPicker.setColor(color)
+        binding.colorView.setCardBackgroundColor(color)
     }
 
     protected open fun onColorListenerCalled(color: Int, colorHex: String) {

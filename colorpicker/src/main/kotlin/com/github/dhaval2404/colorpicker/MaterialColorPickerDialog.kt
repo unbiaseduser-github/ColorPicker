@@ -309,7 +309,7 @@ class MaterialColorPickerDialog private constructor(
 
         // Setup Color Listing Adapter
         val colorList = colors ?: ColorUtil.getColors(context, colorSwatch.value)
-        val adapter = MaterialColorPickerAdapter(colorList)
+        val adapter = MaterialColorPickerAdapter(colorList) {}
         adapter.setColorShape(colorShape)
         adapter.setTickColorPerCard(isTickColorPerCard)
         if (!defaultColor.isNullOrBlank()) {

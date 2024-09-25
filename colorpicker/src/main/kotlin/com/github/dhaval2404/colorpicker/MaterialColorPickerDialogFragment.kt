@@ -108,7 +108,9 @@ open class MaterialColorPickerDialogFragment() : DialogFragment() {
 
         // Setup Color Listing Adapter
         val colorList = colors ?: ColorUtil.getColors(context, colorSwatch.value)
-        adapter = MaterialColorPickerAdapter(colorList)
+        adapter = MaterialColorPickerAdapter(colorList) { color ->
+            onColorSelected(ColorUtil.parseColor(color), color)
+        }
         adapter.setColorShape(colorShape)
         adapter.setTickColorPerCard(isTickColorPerCard)
         if (!defaultColor.isNullOrBlank()) {
@@ -128,6 +130,8 @@ open class MaterialColorPickerDialogFragment() : DialogFragment() {
 
         return dialog.create().apply { setButtonTextColor() }
     }
+
+    protected open fun onColorSelected(color: Int, colorHex: String) = Unit
 
     protected open fun onColorListenerCalled(color: Int, colorHex: String) {
         colorListener?.onColorSelected(color, colorHex)

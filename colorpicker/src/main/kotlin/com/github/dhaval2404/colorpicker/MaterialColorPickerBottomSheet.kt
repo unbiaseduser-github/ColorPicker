@@ -119,7 +119,9 @@ open class MaterialColorPickerBottomSheet() : BottomSheetDialogFragment() {
         negativeButton?.let { binding.negativeBtn.text = it }
 
         val colorList = colors ?: ColorUtil.getColors(requireContext(), colorSwatch.value)
-        adapter = MaterialColorPickerAdapter(colorList)
+        adapter = MaterialColorPickerAdapter(colorList) { color ->
+            onColorSelected(ColorUtil.parseColor(color), color)
+        }
         adapter.setColorShape(colorShape)
         adapter.setTickColorPerCard(isTickColorPerCard)
         if (!defaultColor.isNullOrBlank()) {
@@ -136,6 +138,8 @@ open class MaterialColorPickerBottomSheet() : BottomSheetDialogFragment() {
         }
         binding.negativeBtn.setOnClickListener { dismiss() }
     }
+
+    protected open fun onColorSelected(color: Int, colorHex: String) = Unit
 
     protected open fun onColorListenerCalled(color: Int, colorHex: String) {
         colorListener?.onColorSelected(color, colorHex)
