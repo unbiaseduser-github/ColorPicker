@@ -133,28 +133,28 @@ open class MaterialColorPickerDialogFragment() : DialogFragment() {
 
     protected open fun onColorSelected(color: Int, colorHex: String) = Unit
 
-    protected open fun onColorListenerCalled(color: Int, colorHex: String) {
+    protected open fun callColorListener(color: Int, colorHex: String) {
         colorListener?.onColorSelected(color, colorHex)
     }
 
-    protected open fun onDismissListenerCalled() {
+    protected open fun callDismissListener() {
         dismissListener?.onDismiss()
     }
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        onDismissListenerCalled()
+        callDismissListener()
         if (positiveButtonClicked) {
             val color = adapter.getSelectedColor()
             if (color.isNotBlank()) {
-                onColorListenerCalled(ColorUtil.parseColor(color), color)
+                callColorListener(ColorUtil.parseColor(color), color)
             }
         }
     }
 
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
-        onDismissListenerCalled()
+        callDismissListener()
     }
 
     override fun onDestroyView() {

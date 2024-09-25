@@ -138,28 +138,28 @@ open class ColorPickerDialogFragment() : DialogFragment() {
         binding.colorView.setCardBackgroundColor(color)
     }
 
-    protected open fun onColorListenerCalled(color: Int, colorHex: String) {
+    protected open fun callColorListener(color: Int, colorHex: String) {
         colorListener?.onColorSelected(color, colorHex)
         sharedPref.addColor(color = colorHex)
     }
 
-    protected open fun onDismissListenerCalled() {
+    protected open fun callDismissListener() {
         dismissListener?.onDismiss()
     }
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        onDismissListenerCalled()
+        callDismissListener()
         if (positiveButtonClicked) {
             val color = binding.colorPicker.getColor()
             val colorHex = ColorUtil.formatColor(color)
-            onColorListenerCalled(color, colorHex)
+            callColorListener(color, colorHex)
         }
     }
 
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
-        onDismissListenerCalled()
+        callDismissListener()
     }
 
     override fun onDestroyView() {
