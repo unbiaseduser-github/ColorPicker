@@ -140,7 +140,6 @@ open class ColorPickerDialogFragment() : DialogFragment() {
 
     protected open fun callColorListener(color: Int, colorHex: String) {
         colorListener?.onColorSelected(color, colorHex)
-        sharedPref.addColor(color = colorHex)
     }
 
     protected open fun callDismissListener() {
@@ -154,6 +153,7 @@ open class ColorPickerDialogFragment() : DialogFragment() {
             val color = binding.colorPicker.getColor()
             val colorHex = ColorUtil.formatColor(color)
             callColorListener(color, colorHex)
+            sharedPref.addColor(color = colorHex)
         }
     }
 
