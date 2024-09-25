@@ -274,8 +274,6 @@ class MaterialColorPickerDialog private constructor(
 
     fun createBottomSheet(): BottomSheetDialogFragment {
         return MaterialColorPickerBottomSheet.getInstance(this)
-            .setColorListener(colorListener)
-            .setDismissListener(dismissListener)
     }
 
     /**

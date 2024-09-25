@@ -22,7 +22,29 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
  * @version 1.0
  * @since 24 Dec 2019
  */
-class MaterialColorPickerBottomSheet : BottomSheetDialogFragment() {
+open class MaterialColorPickerBottomSheet() : BottomSheetDialogFragment() {
+
+    constructor(dialog: MaterialColorPickerDialog) : this() {
+        arguments = Bundle().apply {
+            putString(EXTRA_TITLE, dialog.title)
+            putString(EXTRA_POSITIVE_BUTTON, dialog.positiveButton)
+            putString(EXTRA_NEGATIVE_BUTTON, dialog.negativeButton)
+
+            putString(EXTRA_DEFAULT_COLOR, dialog.defaultColor)
+            putParcelable(EXTRA_COLOR_SWATCH, dialog.colorSwatch)
+            putParcelable(EXTRA_COLOR_SHAPE, dialog.colorShape)
+            putBoolean(EXTRA_IS_TICK_COLOR_PER_CARD, dialog.isTickColorPerCard)
+
+            var list: ArrayList<String>? = null
+            if (dialog.colors != null) {
+                list = ArrayList(dialog.colors)
+            }
+            putStringArrayList(EXTRA_COLORS, list)
+        }
+
+        this.colorListener = dialog.colorListener
+        this.dismissListener = dialog.dismissListener
+    }
 
     private var title: String? = null
     private var positiveButton: String? = null
@@ -53,26 +75,7 @@ class MaterialColorPickerBottomSheet : BottomSheetDialogFragment() {
         private const val EXTRA_IS_TICK_COLOR_PER_CARD = "extra.is_tick_color_per_card"
 
         fun getInstance(dialog: MaterialColorPickerDialog): MaterialColorPickerBottomSheet {
-            val bundle = Bundle().apply {
-                putString(EXTRA_TITLE, dialog.title)
-                putString(EXTRA_POSITIVE_BUTTON, dialog.positiveButton)
-                putString(EXTRA_NEGATIVE_BUTTON, dialog.negativeButton)
-
-                putString(EXTRA_DEFAULT_COLOR, dialog.defaultColor)
-                putParcelable(EXTRA_COLOR_SWATCH, dialog.colorSwatch)
-                putParcelable(EXTRA_COLOR_SHAPE, dialog.colorShape)
-                putBoolean(EXTRA_IS_TICK_COLOR_PER_CARD, dialog.isTickColorPerCard)
-
-                var list: ArrayList<String>? = null
-                if (dialog.colors != null) {
-                    list = ArrayList(dialog.colors)
-                }
-                putStringArrayList(EXTRA_COLORS, list)
-            }
-
-            return MaterialColorPickerBottomSheet().apply {
-                arguments = bundle
-            }
+            return MaterialColorPickerBottomSheet(dialog)
         }
     }
 
@@ -134,20 +137,28 @@ class MaterialColorPickerBottomSheet : BottomSheetDialogFragment() {
         binding.negativeBtn.setOnClickListener { dismiss() }
     }
 
+    protected open fun onColorListenerCalled(color: Int, colorHex: String) {
+        colorListener?.onColorSelected(color, colorHex)
+    }
+
+    protected open fun onDismissListenerCalled() {
+        dismissListener?.onDismiss()
+    }
+
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        dismissListener?.onDismiss()
+        onDismissListenerCalled()
         if (positiveButtonClicked) {
             val color = adapter.getSelectedColor()
             if (color.isNotBlank()) {
-                colorListener?.onColorSelected(ColorUtil.parseColor(color), color)
+                onColorListenerCalled(ColorUtil.parseColor(color), color)
             }
         }
     }
 
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
-        dismissListener?.onDismiss()
+        onDismissListenerCalled()
     }
 
     override fun onDestroyView() {

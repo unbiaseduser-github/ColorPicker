@@ -16,7 +16,29 @@ import com.github.dhaval2404.colorpicker.util.setButtonTextColor
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-class MaterialColorPickerDialogFragment : DialogFragment() {
+open class MaterialColorPickerDialogFragment() : DialogFragment() {
+
+    constructor(dialog: MaterialColorPickerDialog) : this() {
+        arguments = Bundle().apply {
+            putString(EXTRA_TITLE, dialog.title)
+            putString(EXTRA_POSITIVE_BUTTON, dialog.positiveButton)
+            putString(EXTRA_NEGATIVE_BUTTON, dialog.negativeButton)
+
+            putString(EXTRA_DEFAULT_COLOR, dialog.defaultColor)
+            putParcelable(EXTRA_COLOR_SWATCH, dialog.colorSwatch)
+            putParcelable(EXTRA_COLOR_SHAPE, dialog.colorShape)
+            putBoolean(EXTRA_IS_TICK_COLOR_PER_CARD, dialog.isTickColorPerCard)
+
+            var list: ArrayList<String>? = null
+            if (dialog.colors != null) {
+                list = ArrayList(dialog.colors)
+            }
+            putStringArrayList(EXTRA_COLORS, list)
+        }
+
+        this.colorListener = dialog.colorListener
+        this.dismissListener = dialog.dismissListener
+    }
 
     private var _binding: DialogMaterialColorPickerBinding? = null
     private val binding: DialogMaterialColorPickerBinding get() = _binding!!
@@ -47,28 +69,7 @@ class MaterialColorPickerDialogFragment : DialogFragment() {
         private const val EXTRA_IS_TICK_COLOR_PER_CARD = "extra.is_tick_color_per_card"
 
         fun newInstance(dialog: MaterialColorPickerDialog): MaterialColorPickerDialogFragment {
-            val bundle = Bundle().apply {
-                putString(EXTRA_TITLE, dialog.title)
-                putString(EXTRA_POSITIVE_BUTTON, dialog.positiveButton)
-                putString(EXTRA_NEGATIVE_BUTTON, dialog.negativeButton)
-
-                putString(EXTRA_DEFAULT_COLOR, dialog.defaultColor)
-                putParcelable(EXTRA_COLOR_SWATCH, dialog.colorSwatch)
-                putParcelable(EXTRA_COLOR_SHAPE, dialog.colorShape)
-                putBoolean(EXTRA_IS_TICK_COLOR_PER_CARD, dialog.isTickColorPerCard)
-
-                var list: ArrayList<String>? = null
-                if (dialog.colors != null) {
-                    list = ArrayList(dialog.colors)
-                }
-                putStringArrayList(EXTRA_COLORS, list)
-            }
-
-            return MaterialColorPickerDialogFragment().apply {
-                this.colorListener = dialog.colorListener
-                this.dismissListener = dialog.dismissListener
-                arguments = bundle
-            }
+            return MaterialColorPickerDialogFragment(dialog)
         }
     }
 
@@ -128,20 +129,28 @@ class MaterialColorPickerDialogFragment : DialogFragment() {
         return dialog.create().apply { setButtonTextColor() }
     }
 
+    protected open fun onColorListenerCalled(color: Int, colorHex: String) {
+        colorListener?.onColorSelected(color, colorHex)
+    }
+
+    protected open fun onDismissListenerCalled() {
+        dismissListener?.onDismiss()
+    }
+
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        dismissListener?.onDismiss()
+        onDismissListenerCalled()
         if (positiveButtonClicked) {
             val color = adapter.getSelectedColor()
             if (color.isNotBlank()) {
-                colorListener?.onColorSelected(ColorUtil.parseColor(color), color)
+                onColorListenerCalled(ColorUtil.parseColor(color), color)
             }
         }
     }
 
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
-        dismissListener?.onDismiss()
+        onDismissListenerCalled()
     }
 
     override fun onDestroyView() {

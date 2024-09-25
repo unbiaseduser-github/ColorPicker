@@ -18,7 +18,21 @@ import com.github.dhaval2404.colorpicker.util.setButtonTextColor
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-class ColorPickerDialogFragment : DialogFragment() {
+open class ColorPickerDialogFragment() : DialogFragment() {
+
+    constructor(dialog: ColorPickerDialog) : this() {
+        arguments = Bundle().apply {
+            putString(EXTRA_TITLE, dialog.title)
+            putString(EXTRA_POSITIVE_BUTTON, dialog.positiveButton)
+            putString(EXTRA_NEGATIVE_BUTTON, dialog.negativeButton)
+
+            putString(EXTRA_DEFAULT_COLOR, dialog.defaultColor)
+            putParcelable(EXTRA_COLOR_SHAPE, dialog.colorShape)
+        }
+
+        this.colorListener = dialog.colorListener
+        this.dismissListener = dialog.dismissListener
+    }
 
     private var _binding: DialogColorPickerBinding? = null
     private val binding: DialogColorPickerBinding get() = _binding!!
@@ -43,20 +57,7 @@ class ColorPickerDialogFragment : DialogFragment() {
         private const val EXTRA_COLOR_SHAPE = "extra.color_shape"
 
         fun newInstance(dialog: ColorPickerDialog): ColorPickerDialogFragment {
-            val bundle = Bundle().apply {
-                putString(EXTRA_TITLE, dialog.title)
-                putString(EXTRA_POSITIVE_BUTTON, dialog.positiveButton)
-                putString(EXTRA_NEGATIVE_BUTTON, dialog.negativeButton)
-
-                putString(EXTRA_DEFAULT_COLOR, dialog.defaultColor)
-                putParcelable(EXTRA_COLOR_SHAPE, dialog.colorShape)
-            }
-
-            return ColorPickerDialogFragment().apply {
-                this.colorListener = dialog.colorListener
-                this.dismissListener = dialog.dismissListener
-                arguments = bundle
-            }
+            return ColorPickerDialogFragment(dialog)
         }
 
     }
@@ -129,20 +130,28 @@ class ColorPickerDialogFragment : DialogFragment() {
         return dialog.create().apply { setButtonTextColor() }
     }
 
+    protected open fun onColorListenerCalled(color: Int, colorHex: String) {
+        colorListener?.onColorSelected(color, colorHex)
+        sharedPref.addColor(color = colorHex)
+    }
+
+    protected open fun onDismissListenerCalled() {
+        dismissListener?.onDismiss()
+    }
+
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        dismissListener?.onDismiss()
+        onDismissListenerCalled()
         if (positiveButtonClicked) {
             val color = binding.colorPicker.getColor()
             val colorHex = ColorUtil.formatColor(color)
-            colorListener?.onColorSelected(color, colorHex)
-            sharedPref.addColor(color = colorHex)
+            onColorListenerCalled(color, colorHex)
         }
     }
 
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
-        dismissListener?.onDismiss()
+        onDismissListenerCalled()
     }
 
     override fun onDestroyView() {
