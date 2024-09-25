@@ -74,7 +74,7 @@ afterEvaluate {
             release(MavenPublication) {
                 groupId = 'com.github.dhaval2404'
                 artifactId = 'colorpicker-patch'
-                version = '2.3-patch2'
+                version = '2.3-patch3'
 
                 pom {
                     name = 'colorpicker'
